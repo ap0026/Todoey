@@ -12,8 +12,15 @@ class TodoListViewController: UITableViewController {
     
     var itemArray = ["Find Mikey", "Get some Eggos", "Defeat Demogorgon"]
     
+    let defaults = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+    // taking array from default location
+        if let array = defaults.array(forKey: "TodoListArray") as? [String] {
+             itemArray = array
+        }
     }
     
     //MARK - tableview datasource methods
@@ -52,6 +59,10 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add New", style: .default) { (action) in
             // what will happen once user clics + on nav bar
             self.itemArray.append(textField.text!)
+            
+            //storing array to default location
+            self.defaults.set(self.itemArray, forKey: "TodoListArray")
+            
             self.tableView.reloadData()
         }
         
