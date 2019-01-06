@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 class CategoryViewController: SwipeTableViewController {
     
@@ -28,7 +29,11 @@ class CategoryViewController: SwipeTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 //        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! SwipeTableViewCell
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories added"
+        guard let category = categories?[indexPath.row] else { fatalError() }
+        guard let categoryColour = UIColor(hexString: category.colour) else { fatalError() }
+        cell.textLabel?.text = category.name
+        cell.backgroundColor = categoryColour
+        cell.textLabel?.textColor = ContrastColorOf(categoryColour, returnFlat: true)
 //        cell.delegate = self
         
         return cell
@@ -94,6 +99,7 @@ class CategoryViewController: SwipeTableViewController {
             
             let newItem = Category()
             newItem.name = textField.text!
+            newItem.colour = UIColor.randomFlat.hexValue()
             
             //storing array to default location
             //self.defaults.set(self.todoItems, forKey: "TodoListArray")
